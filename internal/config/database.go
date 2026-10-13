@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 
+	"go-rest-api/internal/models"
+
 	"gorm.io/gorm"
 	"gorm.io/driver/mysql"
 )
@@ -22,6 +24,11 @@ func ConnectDB() {
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
 	}
-	
-	fmt.Println("Database connection established")
+
+	// migration
+	err = DB.AutoMigrate(&models.User{})
+	if err != nil {
+		log.Fatal("Failed to migrate database:", err)
+	}
+	fmt.Println("Database connection established and migration successfully.")
 }
