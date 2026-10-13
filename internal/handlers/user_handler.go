@@ -42,14 +42,14 @@ func (h *UserHandler) Login(c *gin.Context) {
 		return
 	}
 
-	if err := h.service.Login(req.Username, req.Password); err != nil {
+	if token, err := h.service.Login(req.Username, req.Password); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "Invalid username or password",
 		})
 		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"token": token,
+		})
 	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Login successful",
-	})
 }

@@ -3,15 +3,17 @@ package services
 import (
 	"log"
 	"errors"
-	
+
 	"go-rest-api/internal/models"
 	"go-rest-api/internal/repositories"
 	"go-rest-api/pkg/hashing"
+
+	jwtpkg "go-rest-api/pkg/jwt"
 )
 
 type UserService interface {
 	Register(user *models.User) error
-	Login(username string, password string) error
+	Login(username string, password string) (string, error)
 }
 
 type userService struct {
@@ -41,19 +43,26 @@ func (s *userService) Register(user *models.User) error {
 	return nil
 }
 
-func (s *userService) Login(username string, password string) error {
+func (s *userService) Login(username string, password string) (string, error) {
 	// 1. Find user by username
 	user, err := s.repo.Login(username)
 	if err != nil {
 		log.Printf("User not found: %v", err)
-		return errors.New("invalid username or password")
+		return "", errors.New("invalid username or password")
 	}
 
 	// 2. Verify password
 	if !hashing.CheckPasswordHash(password, user.Password) {
 		log.Println("Password mismatch")
-		return errors.New("invalid username or password")
+		return "", errors.New("invalid username or password")
 	}
 
-	return nil
+	// 3. Generate JWT Token
+	token, err := jwtpkg.GenerateToken(user.ID, user.Username)
+	if err != nil {
+		log.Printf("Error generating token: %v", err)
+		return "", errors.New("failed to generate token")
+	}
+
+	return token, nil
 }
