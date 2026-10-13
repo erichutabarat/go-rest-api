@@ -2,9 +2,10 @@ package handlers
 
 import (
 	"net/http"
-	
-	"go-rest-api/internal/services"
+
 	"go-rest-api/internal/models"
+	"go-rest-api/pkg/response"
+	"go-rest-api/internal/services"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,37 +20,61 @@ func NewUserHandler(service services.UserService) *UserHandler {
 
 func (h *UserHandler) Register(c *gin.Context) {
 	var user models.User
+
 	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		response.Error(
+			c,
+			http.StatusBadRequest,
+			"Invalid request body",
+		)
 		return
 	}
 
 	if err := h.service.Register(&user); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to register user"})
+		response.Error(
+			c,
+			http.StatusInternalServerError,
+			"Failed to register user",
+		)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "User registered successfully"})
+	response.Success(
+		c,
+		http.StatusCreated,
+		"User registered successfully",
+		nil,
+	)
 }
 
 func (h *UserHandler) Login(c *gin.Context) {
 	var req models.LoginRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Username and password are required",
-		})
+		response.Error(
+			c,
+			http.StatusBadRequest,
+			"Username and password are required",
+		)
 		return
 	}
 
-	if token, err := h.service.Login(req.Username, req.Password); err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"error": "Invalid username or password",
-		})
+	token, err := h.service.Login(req.Username, req.Password)
+	if err != nil {
+		response.Error(
+			c,
+			http.StatusUnauthorized,
+			"Invalid username or password",
+		)
 		return
-	} else {
-		c.JSON(http.StatusOK, gin.H{
-			"token": token,
-		})
 	}
+
+	response.Success(
+		c,
+		http.StatusOK,
+		"Login successful",
+		gin.H{
+			"token": token,
+		},
+	)
 }
