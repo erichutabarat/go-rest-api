@@ -4,8 +4,9 @@ import (
 	"log"
 	"net/http"
 	"os"
-	
+
 	"go-rest-api/internal/config"
+	"go-rest-api/internal/routes"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -24,7 +25,7 @@ func main() {
 	config.ConnectDB()
 
 	// Setup gin server
-	server := gin.Default()
+	server := routes.SetupRouter(config.DB)
 
 	server.GET("/ping", func (c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{

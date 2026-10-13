@@ -3,12 +3,12 @@ package services
 import (
 	"log"
 
-	"go-rest-api/internal/config"
+	"go-rest-api/internal/models"
 	"go-rest-api/internal/repositories"
 )
 
 type UserService interface {
-	Register(user *config.User) error
+	Register(user *models.User) error
 	Login(username string, password string) error
 }
 
@@ -20,7 +20,7 @@ func NewUserService(repo repositories.UserRepository) UserService {
 	return &userService{repo: repo}
 }
 
-func (s *userService) Register(user *config.User) error {
+func (s *userService) Register(user *models.User) error {
 	if err := s.repo.Register(user); err != nil {
 		log.Printf("Error registering user: %v", err)
 		return err
