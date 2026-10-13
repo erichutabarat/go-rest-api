@@ -7,7 +7,7 @@ import (
 
 type UserRepository interface {
 	Register(user *models.User) error
-	Login(username string, password string) error
+	Login(username string) (*models.User, error)
 }
 
 type userRepository struct {
@@ -22,10 +22,10 @@ func (r *userRepository) Register(user *models.User) error {
 	return r.db.Create(user).Error
 }
 
-func (r *userRepository) Login(username string, password string) error {
+func (r *userRepository) Login(username string) (*models.User, error) {
 	var user models.User
-	if err := r.db.Where("username = ? AND password = ?", username, password).First(&user).Error; err != nil {
-		return err
-	}
-	return nil
+    if err := r.db.Where("username = ?", username).First(&user).Error; err != nil {
+        return nil, err
+    }
+    return &user, nil
 }
