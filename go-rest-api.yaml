@@ -1,0 +1,84 @@
+openapi: 3.0.0
+info:
+  title: go-rest-api
+  version: 1.0.0
+paths:
+  /ping:
+    get:
+      summary: PING
+      operationId: home_ericdaniel_documents_bruno_go-rest-api_ping_yml
+      description: ""
+      tags:
+        - ""
+      responses:
+        "200":
+          description: ""
+      servers:
+        - url: http://localhost:8080
+  /api/v1/user/register:
+    post:
+      summary: Register
+      operationId: home_ericdaniel_documents_bruno_go-rest-api_register_yml
+      description: ""
+      tags:
+        - ""
+      responses:
+        "200":
+          description: ""
+      requestBody:
+        $ref: "#/components/requestBodies/register"
+      servers:
+        - url: http://localhost:8080
+  /api/v1/user/login:
+    post:
+      summary: Login
+      operationId: home_ericdaniel_documents_bruno_go-rest-api_login_yml
+      description: ""
+      tags:
+        - ""
+      responses:
+        "200":
+          description: ""
+      requestBody:
+        $ref: "#/components/requestBodies/login"
+      servers:
+        - url: http://localhost:8080
+servers: []
+components:
+  schemas:
+    register:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      example:
+        username: tast
+        password: tast
+    login:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      example:
+        username: tost
+        password: tost
+  requestBodies:
+    register:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/register"
+      description: ""
+      required: true
+    login:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/login"
+      description: ""
+      required: true
+  securitySchemes: {}
