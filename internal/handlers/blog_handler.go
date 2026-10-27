@@ -68,3 +68,23 @@ func (h *BlogHandler) CreatePost(c *gin.Context) {
 	)
 	return
 }
+
+func (b *BlogHandler) ReadAll(c *gin.Context) {
+	posts, err := b.service.ReadAllPost()
+	if err != nil {
+		Message := fmt.Sprintf("Failed get posts: %s", err)
+		response.Error(
+			c,
+			http.StatusInternalServerError,
+			Message,
+		)
+		return
+	}
+	response.Success(
+		c,
+		http.StatusOK,
+		"Success get posts",
+		posts,
+	)
+	return
+}

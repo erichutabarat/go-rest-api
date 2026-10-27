@@ -13,7 +13,7 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 
 	// Register user routes
 	RegisterUserRoutes(v1, db)
-	RegisterBlogRoute(v1, db)
+	RegisterBlogRoutes(v1, db)
 
 	return r
 }

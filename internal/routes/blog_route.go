@@ -10,12 +10,15 @@ import (
 	"gorm.io/gorm"
 )
 
-func RegisterBlogRoute(router *gin.RouterGroup, db *gorm.DB) {
+func RegisterBlogRoutes(router *gin.RouterGroup, db *gorm.DB) {
 	blogRepo := repositories.NewBlogRepository(db)
 	blogService := services.NewBlogService(blogRepo)
 	blogHandler := handlers.NewBlogHandler(blogService)
 
-	// blogRoutes := router.Group("/blog")
+	blogRoutes := router.Group("/blog")
+	{
+		blogRoutes.GET("/post", blogHandler.ReadAll)
+	}
 
 	protectedBlogRoutes := router.Group("/blog")
 	protectedBlogRoutes.Use(middlewares.AuthMiddleware())
