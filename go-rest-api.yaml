@@ -1,84 +1,111 @@
-openapi: 3.0.0
+opencollection: 1.0.0
 info:
-  title: go-rest-api
-  version: 1.0.0
-paths:
-  /ping:
-    get:
-      summary: PING
-      operationId: home_ericdaniel_documents_bruno_go-rest-api_ping_yml
-      description: ""
-      tags:
-        - ""
-      responses:
-        "200":
-          description: ""
-      servers:
-        - url: http://localhost:8080
-  /api/v1/user/register:
-    post:
-      summary: Register
-      operationId: home_ericdaniel_documents_bruno_go-rest-api_register_yml
-      description: ""
-      tags:
-        - ""
-      responses:
-        "200":
-          description: ""
-      requestBody:
-        $ref: "#/components/requestBodies/register"
-      servers:
-        - url: http://localhost:8080
-  /api/v1/user/login:
-    post:
-      summary: Login
-      operationId: home_ericdaniel_documents_bruno_go-rest-api_login_yml
-      description: ""
-      tags:
-        - ""
-      responses:
-        "200":
-          description: ""
-      requestBody:
-        $ref: "#/components/requestBodies/login"
-      servers:
-        - url: http://localhost:8080
-servers: []
-components:
-  schemas:
-    register:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-      example:
-        username: tast
-        password: tast
-    login:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-      example:
-        username: tost
-        password: tost
-  requestBodies:
-    register:
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/register"
-      description: ""
-      required: true
-    login:
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/login"
-      description: ""
-      required: true
-  securitySchemes: {}
+  name: go-rest-api
+config:
+  proxy:
+    inherit: true
+    config:
+      protocol: http
+      hostname: ''
+      port: ''
+      auth:
+        username: ''
+        password: ''
+      bypassProxy: ''
+items:
+  - info:
+      name: Login
+      type: http
+      seq: 3
+    http:
+      method: POST
+      url: http://localhost:8080/api/v1/user/login
+      body:
+        type: json
+        data: |-
+          {
+            "username": "tost",
+            "password": "tost"
+          }
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+  - info:
+      name: PING
+      type: http
+      seq: 1
+    http:
+      method: GET
+      url: http://192.168.49.2:30536/ping
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+  - info:
+      name: Register
+      type: http
+      seq: 2
+    http:
+      method: POST
+      url: http://localhost:8080/api/v1/user/register
+      body:
+        type: json
+        data: |-
+          {
+            "username": "tast",
+            "password": "tast"
+          }
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+  - info:
+      name: Read ALL POST
+      type: http
+      seq: 4
+    http:
+      method: GET
+      url: http://localhost:8080/api/v1/blog/post
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+  - info:
+      name: Create Post
+      type: http
+      seq: 5
+    http:
+      method: POST
+      url: http://localhost:8080/api/v1/blog/post
+      body:
+        type: json
+        data: |-
+          {
+            "title": "hello world",
+            "content": "just saying hello world"
+          }
+      auth:
+        type: bearer
+        token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3OTMxNzcyMzIsInVzZXJfaWQiOjMsInVzZXJuYW1lIjoidG9zdCJ9.ssKdpngbMQHWuVMRNPp1rq4_sRaYslWECuddaqBAM8E
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+bundled: true
+extensions:
+  bruno:
+    ignore:
+      - node_modules
+      - .git
+    exportedAt: '2026-10-27T08:50:13.181Z'
+    exportedUsing: Bruno
