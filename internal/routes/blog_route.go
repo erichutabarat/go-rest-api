@@ -18,11 +18,13 @@ func RegisterBlogRoutes(router *gin.RouterGroup, db *gorm.DB) {
 	blogRoutes := router.Group("/blog")
 	{
 		blogRoutes.GET("/post", blogHandler.ReadAll)
+		blogRoutes.GET("/post/:id", blogHandler.ReadByID)
 	}
 
 	protectedBlogRoutes := router.Group("/blog")
 	protectedBlogRoutes.Use(middlewares.AuthMiddleware())
 	{
 		protectedBlogRoutes.POST("/post", blogHandler.CreatePost)
+		protectedBlogRoutes.DELETE("/post/:id", blogHandler.Delete)
 	}
 }
