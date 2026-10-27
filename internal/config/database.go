@@ -1,14 +1,14 @@
 package config
 
 import (
-	"log"
 	"fmt"
+	"log"
 	"os"
 
 	"go-rest-api/internal/models"
 
-	"gorm.io/gorm"
 	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 var DB *gorm.DB
@@ -18,7 +18,7 @@ func ConnectDB() {
 	if dsn == "" {
 		log.Fatal("DB_DSN is not set in .env")
 	}
-	
+
 	var err error
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -26,7 +26,11 @@ func ConnectDB() {
 	}
 
 	// migration
-	err = DB.AutoMigrate(&models.User{})
+	err = DB.AutoMigrate(
+		&models.User{},
+		&models.Post{},
+	)
+
 	if err != nil {
 		log.Fatal("Failed to migrate database:", err)
 	}
