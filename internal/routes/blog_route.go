@@ -5,6 +5,7 @@ import (
 	"go-rest-api/internal/middlewares"
 	"go-rest-api/internal/repositories"
 	"go-rest-api/internal/services"
+	"go-rest-api/pkg/redis_cache"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -12,7 +13,7 @@ import (
 
 func RegisterBlogRoutes(router *gin.RouterGroup, db *gorm.DB) {
 	blogRepo := repositories.NewBlogRepository(db)
-	blogService := services.NewBlogService(blogRepo)
+	blogService := services.NewBlogService(blogRepo, redis_cache.RDB)
 	blogHandler := handlers.NewBlogHandler(blogService)
 
 	blogRoutes := router.Group("/blog")

@@ -102,7 +102,7 @@ func (h *BlogHandler) ReadByID(c *gin.Context) {
 		return
 	}
 
-	post, err := h.service.ReadByID(uint(id64))
+	post, err := h.service.ReadByID(c.Request.Context(), uint(id64))
 	if err != nil {
 		response.Error(
 			c,
@@ -153,7 +153,7 @@ func (h *BlogHandler) Delete(c *gin.Context) {
 		return
 	}
 
-	err = h.service.Delete(uint(id64), userID)
+	err = h.service.Delete(c.Request.Context(), uint(id64), userID)
 	if err != nil {
 		if err.Error() == "You are not authorized to perform this action" {
 			response.Error(
