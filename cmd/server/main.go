@@ -15,7 +15,7 @@ import (
 func main() {
 	// Load env
 	if err := godotenv.Load(); err != nil {
-		log.Fatal("Error Loading .env file")
+		log.Println(".env file not found; using environment variables")
 	}
 
 	// Load PORT
@@ -27,7 +27,7 @@ func main() {
 	// Setup gin server
 	server := routes.SetupRouter(config.DB)
 
-	server.GET("/ping", func (c *gin.Context) {
+	server.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
 		})
