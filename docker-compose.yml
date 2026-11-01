@@ -16,6 +16,9 @@ services:
       mysql:
         condition: service_healthy
 
+    networks:
+      - go-rest-api-network
+
   mysql:
     image: mysql:8.0
     container_name: mysql
@@ -38,6 +41,30 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
+    networks:
+      - go-rest-api-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - go-rest-api-network
 
 volumes:
   mysql_data:
+  redis_data:
+
+networks:
+  go-rest-api-network:
+    driver: bridge
