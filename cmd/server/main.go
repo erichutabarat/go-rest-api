@@ -7,6 +7,7 @@ import (
 
 	"go-rest-api/internal/config"
 	"go-rest-api/internal/routes"
+	"go-rest-api/pkg/redis_cache"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -23,6 +24,9 @@ func main() {
 
 	// initialize db connection
 	config.ConnectDB()
+
+	// initilize redis connection
+	redis_cache.InitRedis()
 
 	// Setup gin server
 	server := routes.SetupRouter(config.DB)
